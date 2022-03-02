@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
+import Capability from './Capability';
 import Video from './Video';
 import styles from './WebcamTuner.module.css';
 
 function WebcamTuner() {
-  const [brightness, setBrightness] = useState(0);
-  const [exposureTime, setExposureTime] = useState(10);
   const [mediaStream, setMediaStream] = useState(null);
+  const [constraints, setConstraints] = useState({});
 
   const getTrackFromStream = s => s.getVideoTracks()[0];
+
+  if(mediaStream && Object.keys(constraints).length === 0) {
+    const track = getTrackFromStream(mediaStream);
+    setConstraints(track.getSettings());
+  }
+
   const activateStream = async () => {
     await navigator.mediaDevices.getUserMedia({video:true});
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -19,31 +25,41 @@ function WebcamTuner() {
     return mediaStream;
   }
 
-  const tuneCam = async () => {
-    if(!mediaStream) return;
+  const updateConstraint = async (k, v) => {
     const track = getTrackFromStream(mediaStream);
     await track.applyConstraints({
       "advanced": [
         {
-          "exposureMode": "manual",
-          "brightness": brightness,
-          "exposureTime": exposureTime,
-        }  
+          [k]: v,
+        }
       ],
     });
-  }
+    setConstraints(track.getSettings());
+  };
+
+  const listCapabilities = () => {
+    if(!mediaStream) return null;
+    const track = getTrackFromStream(mediaStream);
+    const capabilities = track.getCapabilities();
+    console.log("settings", constraints);
+    const capabilitiesElem = [];
+    for (const c in capabilities) {
+      capabilitiesElem.push(
+        <Capability key={c} name={c} data={capabilities[c]} value={constraints[c]}  update={updateConstraint} />
+      );
+    }
+    return capabilitiesElem;
+  };
+
   useEffect(() => {
     activateStream().then(s => setMediaStream(s));
   }, []);
 
-  tuneCam();
-  
   return (
     <div>
       WebcamTuner
       {mediaStream ? <Video srcObject={mediaStream} /> : null}
-      <input type="range" id="brightness" className={styles.range_brightness} min="0" max="255" onChange={e => setBrightness(e.target.value)} />
-      <input type="range" id="exposureTime" min="3" max="2047" onChange={e => setExposureTime(e.target.value)} />
+      { listCapabilities() }
     </div>
   );
 }
