@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Capability from './Capability';
+import DeviceSelector from './DeviceSelector';
 import Video from './Video';
-import styles from './WebcamTuner.module.css';
+import './WebcamTuner.module.css';
 
 function WebcamTuner() {
   const [mediaStream, setMediaStream] = useState(null);
@@ -14,16 +15,17 @@ function WebcamTuner() {
     setConstraints(track.getSettings());
   }
 
-  const activateStream = async () => {
-    await navigator.mediaDevices.getUserMedia({video:true});
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const mediaStream = await navigator.mediaDevices.getUserMedia({
-      "video": {
-        "deviceId": devices[2].deviceId,
-      }
+  const getPermissons = async () => {
+    const cameraPerm = await navigator.permissions.query({
+      name: "camera",
     });
-    return mediaStream;
+    if(cameraPerm.name !== "video_capture" || cameraPerm.state !== "granted") {
+      console.log("Requesting camera permissions");
+      await navigator.mediaDevices.getUserMedia({ video: true });
+      window.location.reload();
+    }
   }
+  getPermissons();
 
   const updateConstraint = async (k, v) => {
     const track = getTrackFromStream(mediaStream);
@@ -51,13 +53,10 @@ function WebcamTuner() {
     return capabilitiesElem;
   };
 
-  useEffect(() => {
-    activateStream().then(s => setMediaStream(s));
-  }, []);
-
   return (
     <div>
       WebcamTuner
+      <DeviceSelector setMediaStream={setMediaStream} />
       {mediaStream ? <Video srcObject={mediaStream} /> : null}
       { listCapabilities() }
     </div>
