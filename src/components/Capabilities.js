@@ -4,15 +4,13 @@ function Capabilities({stream, ...props}) {
   const [constraints, setConstraints] = useState({});
 
   if(stream === null || stream === undefined) return null;
-  const getTrackFromStream = s => s.getVideoTracks()[0];
 
-  const track = getTrackFromStream(stream);
+  const track = stream.getVideoTracks()[0];
   if(Object.keys(constraints).length === 0) {
     setConstraints(track.getSettings());
   }
 
   const updateConstraint = async (k, v) => {
-    const track = getTrackFromStream(stream);
     await track.applyConstraints({
       "advanced": [
         {
@@ -23,15 +21,7 @@ function Capabilities({stream, ...props}) {
     setConstraints(track.getSettings());
   };
 
-  const Capability = ({ name, data, value, update }) => {
-    if (typeof data === 'string' || data instanceof String) {
-      return null;
-    }
-  
-    if (Array.isArray(data)) {
-      return null;
-    }
-
+  const RangeCapability = ({ name, data, value }) => {
     return (
       <div>
         <span>{name}</span>
@@ -41,17 +31,44 @@ function Capabilities({stream, ...props}) {
           max={data?.max}
           step={data?.step}
           value={value}
-          onChange={e => update(name, e.target.value)}
+          onChange={e => updateConstraint(name, e.target.value)}
         />
       </div>
     );
   };
-  
+
+  const OptionCapability = ({ name, options, value }) => {
+    return (
+      <div>
+        <span>{name}</span>
+        <select onChange={e => updateConstraint(name, e.target.value)} value={value}>
+          <option>Select option</option>
+          { options.map(o => <option key={o} value={o}>{o}</option>) }
+        </select>
+      </div>
+    );
+  };
+
   const capabilities = track.getCapabilities();
   const capabilitiesElem = [];
   for (const c in capabilities) {
+    const capability = capabilities[c];
+    const constraint = constraints[c];
+
+    // Bypass identifiers mixed on the capabilities listing
+    if (typeof capability === "string" || capability instanceof String) {
+      continue;
+    }
+
+    if (Array.isArray(capability)) {
+      capabilitiesElem.push(
+        <OptionCapability key={c} name={c} options={capability} value={constraint} />
+      );
+      continue;
+    }
+    
     capabilitiesElem.push(
-      <Capability key={c} name={c} data={capabilities[c]} value={constraints[c]}  update={updateConstraint} />
+      <RangeCapability key={c} name={c} data={capability} value={constraint} />
     );
   }
   

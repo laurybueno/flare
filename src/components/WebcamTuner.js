@@ -7,8 +7,6 @@ import './WebcamTuner.module.css';
 function WebcamTuner() {
   const [mediaStream, setMediaStream] = useState(null);
 
-  const getTrackFromStream = s => s.getVideoTracks()[0];
-
   const getPermissons = async () => {
     const cameraPerm = await navigator.permissions.query({
       name: "camera",
