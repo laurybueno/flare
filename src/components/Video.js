@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import styles from './Video.module.css'
 
 export default function Video({ srcObject, ...props }) {
   const refVideo = useRef(null)
@@ -11,5 +12,5 @@ export default function Video({ srcObject, ...props }) {
     };
   }, [srcObject])
 
-  return <video ref={refVideo} {...props} />
+  return <video id={styles.videoCamera} ref={refVideo} {...props} />
 }
