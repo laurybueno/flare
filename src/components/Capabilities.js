@@ -60,16 +60,21 @@ function Capabilities({stream, ...props}) {
       continue;
     }
 
-    if (Array.isArray(capability)) {
+    if (Array.isArray(capability) && capability.length > 0) {
       capabilitiesElem.push(
         <OptionCapability key={c} name={c} options={capability} value={constraint} />
       );
-      continue;
     }
     
-    capabilitiesElem.push(
-      <RangeCapability key={c} name={c} data={capability} value={constraint} />
-    );
+    if (
+      typeof capability === "object" &&
+      !Array.isArray(capability) &&
+      capability !== null
+    ) {
+      capabilitiesElem.push(
+        <RangeCapability key={c} name={c} data={capability} value={constraint} />
+      );
+    }
   }
   
   return (
