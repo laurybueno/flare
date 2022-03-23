@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { FormControl, InputLabel } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 function DeviceSelector({ setMediaStream, ...props }) {
   const [device, setDevice] = useState("");
@@ -48,4 +46,4 @@ function DeviceSelector({ setMediaStream, ...props }) {
   )
 }
 
-export default DeviceSelector
+export default DeviceSelector;
