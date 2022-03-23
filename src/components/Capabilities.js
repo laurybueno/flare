@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Slider } from '@mui/material';
 
 function Capabilities({stream, ...props}) {
   const [constraints, setConstraints] = useState({});
@@ -25,12 +26,13 @@ function Capabilities({stream, ...props}) {
     return (
       <div>
         <span>{name}</span>
-        <input 
-          type="range"
+        <Slider
+          aria-label={name}
+          defaultValue={value}
+          valueLabelDisplay="auto"
+          step={data?.step}
           min={data?.min}
           max={data?.max}
-          step={data?.step}
-          value={value}
           onChange={e => updateConstraint(name, e.target.value)}
         />
       </div>
