@@ -1,4 +1,6 @@
 
 #videoCamera {
+  display: block;
   transform: rotateY(180deg);
+  margin: 0 auto;
 }
