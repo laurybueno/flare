@@ -2,6 +2,7 @@
 export const getTrack = stream => stream.getVideoTracks()[0];
 export const getConstraints = stream => getTrack(stream).getSettings();
 export const getCapabilities = stream => getTrack(stream).getCapabilities();
+
 export const getCapability = function(stream) { 
   return getCapabilities(stream)[this.id];
 }
@@ -18,6 +19,8 @@ export const updateConstraint = async (s, k, v) => {
 
 // Application supported capabilities
 // FIXME: there is a lot of code duplication here. Turn this into a class based hierarchy
+// FIXME: the browser capabilities API gets called far more than necessary below.
+//        A call is only really required if the stream has changed
 const supportedCapabilities = {
   brightness: {
     name: "Brightness",

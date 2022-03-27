@@ -16,7 +16,7 @@ function Capabilities({stream, ...props}) {
     setConstraints(getConstraints(stream));
   };
 
-  const RangeCapability = ({ name, data, value }) => {
+  const RangeCapability = ({ id, name, capability, value }) => {
     return (
       <div>
         <span>{name}</span>
@@ -24,20 +24,20 @@ function Capabilities({stream, ...props}) {
           aria-label={name}
           defaultValue={value}
           valueLabelDisplay="auto"
-          step={data?.step}
-          min={data?.min}
-          max={data?.max}
-          onChange={e => onChangeCapability(name, e.target.value)}
+          step={capability?.step}
+          min={capability?.min}
+          max={capability?.max}
+          onChange={e => onChangeCapability(id, e.target.value)}
         />
       </div>
     );
   };
 
-  const OptionCapability = ({ name, options, value }) => {
+  const OptionCapability = ({ id, name, options, value }) => {
     return (
       <div>
         <span>{name}</span>
-        <select onChange={e => onChangeCapability(name, e.target.value)} value={value}>
+        <select onChange={e => onChangeCapability(id, e.target.value)} value={value}>
           <option>Select option</option>
           { options.map(o => <option key={o} value={o}>{o}</option>) }
         </select>
@@ -55,8 +55,9 @@ function Capabilities({stream, ...props}) {
       capabilitiesElem.push(
         <RangeCapability 
           key={range.id}
-          name={range.id} 
-          data={range.parameters(stream)}
+          id={range.id}
+          name={capabilities[c].name} 
+          capability={range.parameters(stream)}
           value={constraints[range.id]}
         />
       );
@@ -66,6 +67,7 @@ function Capabilities({stream, ...props}) {
       capabilitiesElem.push(
         <OptionCapability 
           key={toggle.id}
+          id={toggle.id}
           name={toggle.id}
           options={toggle.parameters(stream)}
           value={constraints[toggle.id]}
