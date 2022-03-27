@@ -48,27 +48,28 @@ function Capabilities({stream, ...props}) {
   const capabilities = getEnabledCapabilities(stream);
   const capabilitiesElem = [];
   for (const c in capabilities) {
-    const capability = capabilities[c];
-    const constraint = constraints[c];
-
-    // Bypass identifiers mixed on the capabilities listing
-    if (typeof capability === "string" || capability instanceof String) {
-      continue;
-    }
-
-    if (Array.isArray(capability) && capability.length > 0) {
+    const range = capabilities[c].range;
+    const toggle = capabilities[c].toggle;
+    
+    if (range) {
       capabilitiesElem.push(
-        <OptionCapability key={c} name={c} options={capability} value={constraint} />
+        <RangeCapability 
+          key={range.id}
+          name={range.id} 
+          data={range.parameters(stream)}
+          value={constraints[range.id]}
+        />
       );
     }
 
-    if (
-      typeof capability === "object" &&
-      !Array.isArray(capability) &&
-      capability !== null
-    ) {
+    if (toggle) {
       capabilitiesElem.push(
-        <RangeCapability key={c} name={c} data={capability} value={constraint} />
+        <OptionCapability 
+          key={toggle.id}
+          name={toggle.id}
+          options={toggle.parameters(stream)}
+          value={constraints[toggle.id]}
+        />
       );
     }
   }
