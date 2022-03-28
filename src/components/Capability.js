@@ -26,7 +26,7 @@ function Capability({stream, supportedCapability, ...props}) {
   };
 
   const getConstraintFromBool = b => b ? "continuous" : "manual";
-  const getBoolFromConstraint = s => s == "continuous" ? true : false;
+  const getBoolFromConstraint = s => s === "continuous" ? true : false;
   const OptionCapability = ({ id }) => {
     return (
       <div>
