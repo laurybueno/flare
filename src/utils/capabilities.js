@@ -7,6 +7,10 @@ export const getCapability = function(stream) {
   return getCapabilities(stream)[this.id];
 }
 
+export const getConstraint = function(stream) { 
+  return getConstraints(stream)[this.id];
+}
+
 export const updateConstraint = async (s, k, v) => {
   await getTrack(s).applyConstraints({
     "advanced": [
@@ -27,6 +31,7 @@ const supportedCapabilities = {
     range: {
       id: "brightness",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       return this.range.id in getCapabilities(s);
@@ -37,6 +42,7 @@ const supportedCapabilities = {
     range: {
       id: "contrast",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       return this.range.id in getCapabilities(s);
@@ -47,6 +53,7 @@ const supportedCapabilities = {
     range: {
       id: "saturation",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       return this.range.id in getCapabilities(s);
@@ -57,6 +64,7 @@ const supportedCapabilities = {
     range: {
       id: "sharpness",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       return this.range.id in getCapabilities(s);
@@ -67,10 +75,12 @@ const supportedCapabilities = {
     range: {
       id: "colorTemperature",
       parameters: getCapability,
+      value: getConstraint,
     },
     toggle: {
       id: "whiteBalanceMode",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       const caps = getCapabilities(s);
@@ -82,10 +92,12 @@ const supportedCapabilities = {
     range: {
       id: "focusDistance",
       parameters: getCapability,
+      value: getConstraint,
     },
     toggle: {
       id: "focusMode",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       const caps = getCapabilities(s);
@@ -97,10 +109,12 @@ const supportedCapabilities = {
     range: {
       id: "exposureTime",
       parameters: getCapability,
+      value: getConstraint,
     },
     toggle: {
       id: "exposureMode",
       parameters: getCapability,
+      value: getConstraint,
     },
     isSupported: function(s) {
       const caps = getCapabilities(s);
