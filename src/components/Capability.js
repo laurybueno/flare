@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormControlLabel, FormGroup, Slider, Switch } from '@mui/material';
 import { updateConstraint } from '../utils/capabilities';
 
 function Capability({stream, supportedCapability, ...props}) {
-  const [enabled, setEnabled] = useState(false);
+  const [autoEnabled, setAutoEnabled] = useState(true);
 
   const toggle = supportedCapability.toggle;
   const range = supportedCapability.range;
@@ -25,27 +25,37 @@ function Capability({stream, supportedCapability, ...props}) {
     );
   };
 
-  const getConstraintValue = b => b ? "manual" : "continuous";
+  const getConstraintFromBool = b => b ? "continuous" : "manual";
+  const getBoolFromConstraint = s => s == "continuous" ? true : false;
   const OptionCapability = ({ id }) => {
     return (
       <div>
         <FormGroup>
           <FormControlLabel control={
-            <Switch 
-              checked={ enabled }
+            <Switch
+              checked={ autoEnabled }
               onChange={e => {
-                updateConstraint(stream, id, getConstraintValue(e.target.checked));
-                setEnabled(e.target.checked);
+                updateConstraint(stream, id, getConstraintFromBool(e.target.checked));
+                setAutoEnabled(e.target.checked);
               }}
-              inputProps={{ 'aria-label': 'controlled' }}
+              inputProps={{ "aria-label": "controlled" }}
             />
-          } label={"Manual " + supportedCapability.name} />
+          } label={"Automatic " + supportedCapability.name} />
         </FormGroup>
       </div>
     );
   };
 
-  const capElems = []
+  useEffect(() => {
+    if (toggle) {
+      setAutoEnabled(
+        getBoolFromConstraint(
+          toggle.value(stream)
+      ));
+    }
+  }, []);
+  
+  const capElems = [];
   if (toggle) {
     capElems.push(
       <OptionCapability 
@@ -54,7 +64,7 @@ function Capability({stream, supportedCapability, ...props}) {
       />
     );
   }
-  if (range) {
+  if (!toggle || (toggle && !autoEnabled)) {
     capElems.push(
       <RangeCapability
         key={range.id}
@@ -63,7 +73,7 @@ function Capability({stream, supportedCapability, ...props}) {
         capability={range.parameters(stream)}
         value={range.value(stream)}
       />
-    );
+    );  
   }
 
   return (
