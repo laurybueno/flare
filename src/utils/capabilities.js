@@ -13,6 +13,7 @@ export const getConstraint = function(stream) {
 
 export const updateConstraint = async (s, k, v) => {
   await getTrack(s).applyConstraints({
+    [k]: v,
     "advanced": [
       {
         [k]: v,
@@ -26,6 +27,57 @@ export const updateConstraint = async (s, k, v) => {
 // FIXME: the browser capabilities API gets called far more than necessary below.
 //        A call is only really required if the stream has changed
 const supportedCapabilities = {
+  focus: {
+    name: "Focus",
+    range: {
+      id: "focusDistance",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    toggle: {
+      id: "focusMode",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    isSupported: function(s) {
+      const caps = getCapabilities(s);
+      return this.range.id in caps && this.toggle.id in caps;
+    },
+  },
+  exposure: {
+    name: "Exposure",
+    range: {
+      id: "exposureTime",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    toggle: {
+      id: "exposureMode",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    isSupported: function(s) {
+      const caps = getCapabilities(s);
+      return this.range.id in caps && this.toggle.id in caps;
+    },
+  },
+  colorTemperature: {
+    name: "Color Temperature",
+    range: {
+      id: "colorTemperature",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    toggle: {
+      id: "whiteBalanceMode",
+      parameters: getCapability,
+      value: getConstraint,
+    },
+    isSupported: function(s) {
+      const caps = getCapabilities(s);
+      return this.range.id in caps && this.toggle.id in caps;
+    },
+  },
   brightness: {
     name: "Brightness",
     range: {
@@ -68,57 +120,6 @@ const supportedCapabilities = {
     },
     isSupported: function(s) {
       return this.range.id in getCapabilities(s);
-    },
-  },
-  colorTemperature: {
-    name: "Color Temperature",
-    range: {
-      id: "colorTemperature",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    toggle: {
-      id: "whiteBalanceMode",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    isSupported: function(s) {
-      const caps = getCapabilities(s);
-      return this.range.id in caps && this.toggle.id in caps;
-    },
-  },
-  focus: {
-    name: "Focus",
-    range: {
-      id: "focusDistance",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    toggle: {
-      id: "focusMode",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    isSupported: function(s) {
-      const caps = getCapabilities(s);
-      return this.range.id in caps && this.toggle.id in caps;
-    },
-  },
-  exposure: {
-    name: "Exposure",
-    range: {
-      id: "exposureTime",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    toggle: {
-      id: "exposureMode",
-      parameters: getCapability,
-      value: getConstraint,
-    },
-    isSupported: function(s) {
-      const caps = getCapabilities(s);
-      return this.range.id in caps && this.toggle.id in caps;
     },
   },
 };
