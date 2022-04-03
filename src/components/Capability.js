@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FormControlLabel, FormGroup, Slider, Switch } from '@mui/material';
+import { FormControlLabel, FormGroup, Slider, Switch, Card, CardContent } from '@mui/material';
 import { updateConstraint } from '../utils/capabilities';
 
 function Capability({stream, supportedCapability, ...props}) {
@@ -77,9 +77,11 @@ function Capability({stream, supportedCapability, ...props}) {
   }
 
   return (
-    <div>
-      { capElems }
-    </div>
+    <Card sx={{ backgroundColor: "#4D243D" }}>
+      <CardContent>
+        { capElems }
+      </CardContent>
+    </Card>
   )
 }
     

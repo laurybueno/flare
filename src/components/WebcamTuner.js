@@ -22,7 +22,7 @@ function WebcamTuner() {
   getPermissons();
 
   return (
-    <Container >
+    <Container>
       <Grid container spacing={2}>
         <Grid item xs={1} sm={3} />
         <Grid item xs={10} sm={6}>

@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material';
 import { getEnabledCapabilities } from '../utils/capabilities';
 import Capability from './Capability';
 
@@ -18,9 +19,9 @@ function Capabilities({stream, ...props}) {
   }
 
   return (
-    <div>
+    <Stack spacing={2}>
       { capabilitiesElem }
-    </div>
+    </Stack>
   );
 }
 
