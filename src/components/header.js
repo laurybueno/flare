@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 function Header() {
   return (
     <header>
-      <Typography variant="h1" align="center">
+      <Typography variant="h2" align="center">
         {"<flare />"} 
       </Typography>
       <Typography variant="h5" align="center">
